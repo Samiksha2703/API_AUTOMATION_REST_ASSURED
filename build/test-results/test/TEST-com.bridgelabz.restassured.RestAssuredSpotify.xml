@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bridgelabz.restassured.RestAssuredSpotify" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-04-26T13:44:02" hostname="LAPTOP-VA1S61KV" time="5.468">
+  <properties/>
+  <testcase name="getCurrentUsersProfile" classname="com.bridgelabz.restassured.RestAssuredSpotify" time="5.468"/>
+  <system-out><![CDATA[{
+    "country": "IN",
+    "display_name": "Samiksha",
+    "email": "samikshashende777@gmail.com",
+    "explicit_content": {
+        "filter_enabled": false,
+        "filter_locked": false
+    },
+    "external_urls": {
+        "spotify": "https://open.spotify.com/user/uclfdt3jie5b7vorl9472d5g5"
+    },
+    "followers": {
+        "href": null,
+        "total": 0
+    },
+    "href": "https://api.spotify.com/v1/users/uclfdt3jie5b7vorl9472d5g5",
+    "id": "uclfdt3jie5b7vorl9472d5g5",
+    "images": [
+        
+    ],
+    "product": "open",
+    "type": "user",
+    "uri": "spotify:user:uclfdt3jie5b7vorl9472d5g5"
+}
+UserID :uclfdt3jie5b7vorl9472d5g5
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
