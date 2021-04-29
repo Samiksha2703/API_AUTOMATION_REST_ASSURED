@@ -2,22 +2,25 @@ package com.bridgelabz.restassured;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
 import static io.restassured.RestAssured.given;
 
 public class RestAssuredSpotify {
 
     public String token = "";
     public static String userID = "";
+    public static String playlistID = "";
 
     @BeforeTest
     public void setUp() {
-        token = "Bearer BQAU4BvVhhpRMhtjZODNkur8lowR_E3QYo10O8bcYIm0xaf6V6vAtODcsdOiCM3jUyQpDUXRgm6wGQtpSS-s85K59rytEFGeXnp6ADCqSktNvR6lvWheKCFq8oFwQ3HjdyRQEhSsF4AjWR3wKH7CeggRhmx_FeWvpen7rwtoiGKJiYwYPk28dg3jBFpEi5d6ylfzWwmpiMwhnQhMR14QxrFM7BzXtfNph0DT-oUepo0sJfFDzzR6LGJRI35K6g0hsKoRDATBp0p7ODwLctEUF6T-a4rddz2qoGPuPHHh";
+        token = "Bearer BQDHuwcHyucXx5NY5B8NCwUIfyflaC-57Bemjij_lWAMN9zUUG1a5plhhuDgODesoD4dmNfaRRQfPCMfutEm1u9TkanRTj53yLWh70uX95F8d-MHqW8HeuENQdsIm4_F8PDc9mGdzzKol7aggmVmPUsA4G5emZ3hmneLAwfyqsEw8AlzLwLUdImFb3W-ynfqAugTJOMHhwIcTK-FVFNUJOWzleKKgyeiNUgyJGv-xbCJ0YSZhIp4Az6W_aZHPUn7TgVEC6FQVowWTuB9g74s5nTPICg3ssSR42kbITvh";
     }
 
-    @Test
-    public void getCurrentUsersProfile() {
+    @Test(priority = 1)
+    public void getCurrentUsersProfile_GET_REQUEST() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -29,8 +32,8 @@ public class RestAssuredSpotify {
         System.out.println("UserID :" + userID);
     }
 
-    @Test
-    public void getUserProfile() {
+    @Test(priority = 2)
+    public void getUserProfile_GET_REQUEST() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -41,38 +44,58 @@ public class RestAssuredSpotify {
         response.then().statusCode(200);
     }
 
-    @Test
-    public void createPlaylist() {
+    @Test(priority = 3)
+    public void createNewPlaylist_POST_REQUEST() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("Authorization", token)
-                .body("{\"name\":\"MorningVibes\",\"description\":\"Bollywood songs\",\"public\":\"false\"}")
+                .body("{\"name\":\"Latest Bollywood Songs\",\"description\":\"Bollywood songs\",\"public\":\"false\"}")
                 .when()
                 .post("https://api.spotify.com/v1/users/uclfdt3jie5b7vorl9472d5g5/playlists");
-        response.then().assertThat().statusCode(201);
+        String playlistName = response.path("name");
+        Assertions.assertEquals("Latest Bollywood Songs",playlistName);
         response.prettyPrint();
     }
 
-    @Test
-    public void searchItem() {
+    @Test(priority = 4)
+    public void searchItems_GET_REQUEST() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("Authorization", token)
                 .when()
                 .get("https://api.spotify.com/v1/search?q=Jubin&type=track");
+
+        response.then().statusCode(200);
         response.prettyPrint();
     }
 
-    @Test
-    public void addItem() {
+    @Test(priority = 5)
+    public void addItem_POST_REQUEST() {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("Authorization", token)
                 .when()
-                .post("https://api.spotify.com/v1/playlists/5g3AU9TZQmmcqnkBw9CW7R/tracks?uris=spotify%3Aartist%3A1tqysapcCh1lWEAc9dIFpa");
+                .post("https://api.spotify.com/v1/playlists/1UlW6cCJJpi7nJx7hvOxks/tracks?uris=spotify:track:2ufLEVbzvEcJ3subW8jBUp");
         response.prettyPrint();
+    }
+
+    @Test(priority = 6)
+    public void userPlaylist_POST_REQUEST() {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", token)
+                .when()
+                .get("https://api.spotify.com/v1/users/uclfdt3jie5b7vorl9472d5g5/playlists");
+       int total = response.path("total");
+        response.prettyPrint();
+       String [] playlistArray = new String[total];
+       for(int index = 0; index < total; index++){
+           playlistArray[index] = response.path("items["+index+"].name");
+           System.out.println("Playlist : "+playlistArray[index]);
+       }
     }
 }
